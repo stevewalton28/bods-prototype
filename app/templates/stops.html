@@ -1,0 +1,502 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.operator') }}">Operator details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.service') }}">Service details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.route') }}">Route details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Stop points
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Stop points</h1>
+
+{% if mode == 'add' or mode == 'edit' %}
+<!-- Add or Edit Stop Form -->
+<div class="govuk-inset-text">
+  Provide the details for this stop. Once saved, you can add more stops to your route.
+</div>
+
+<div class="govuk-form-group">
+  <form method="post" action="{{ url_for('main.stops', mode=mode, stop_id=stop_id) }}" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="govuk-form-group{% if form.atco_code.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="atco_code">
+        ATCO code (optional)
+      </label>
+      {% if form.atco_code.errors %}
+      <p id="atco_code-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.atco_code.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="atco_code-hint" class="govuk-hint">
+        The ATCO code for this stop (e.g., '260010966')
+      </div>
+      {% set aria_describedby = "atco_code-hint" + (" atco_code-error" if form.atco_code.errors else "") %}
+      {{ form.atco_code(class="govuk-input govuk-input--width-20" + (" govuk-input--error" if form.atco_code.errors else ""), id="atco_code", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+    
+    <div class="govuk-form-group{% if form.naptan_code.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="naptan_code">
+        NaPTAN code (optional)
+      </label>
+      {% if form.naptan_code.errors %}
+      <p id="naptan_code-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.naptan_code.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="naptan_code-hint" class="govuk-hint">
+        The NaPTAN code for this stop
+      </div>
+      {% set aria_describedby = "naptan_code-hint" + (" naptan_code-error" if form.naptan_code.errors else "") %}
+      {{ form.naptan_code(class="govuk-input govuk-input--width-20" + (" govuk-input--error" if form.naptan_code.errors else ""), id="naptan_code", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.common_name.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="common_name">
+        Common name
+      </label>
+      {% if form.common_name.errors %}
+      <p id="common_name-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.common_name.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="common_name-hint" class="govuk-hint">
+        The name of the stop as shown to the public (e.g., 'High Street')
+      </div>
+      {% set aria_describedby = "common_name-hint" + (" common_name-error" if form.common_name.errors else "") %}
+      {{ form.common_name(class="govuk-input" + (" govuk-input--error" if form.common_name.errors else ""), id="common_name", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.indicator.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="indicator">
+        Indicator (optional)
+      </label>
+      {% if form.indicator.errors %}
+      <p id="indicator-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.indicator.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="indicator-hint" class="govuk-hint">
+        Additional information about the stop location (e.g., 'outside', 'opposite')
+      </div>
+      {% set aria_describedby = "indicator-hint" + (" indicator-error" if form.indicator.errors else "") %}
+      {{ form.indicator(class="govuk-input" + (" govuk-input--error" if form.indicator.errors else ""), id="indicator", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.locality.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="locality">
+        Locality
+      </label>
+      {% if form.locality.errors %}
+      <p id="locality-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.locality.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="locality-hint" class="govuk-hint">
+        The town or area where the stop is located
+      </div>
+      {% set aria_describedby = "locality-hint" + (" locality-error" if form.locality.errors else "") %}
+      {{ form.locality(class="govuk-input" + (" govuk-input--error" if form.locality.errors else ""), id="locality", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.longitude.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="longitude">
+        Longitude (optional)
+      </label>
+      {% if form.longitude.errors %}
+      <p id="longitude-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.longitude.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="longitude-hint" class="govuk-hint">
+        The longitude coordinate (e.g., '-0.1276')
+      </div>
+      {% set aria_describedby = "longitude-hint" + (" longitude-error" if form.longitude.errors else "") %}
+      {{ form.longitude(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.longitude.errors else ""), id="longitude", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.latitude.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="latitude">
+        Latitude (optional)
+      </label>
+      {% if form.latitude.errors %}
+      <p id="latitude-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.latitude.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="latitude-hint" class="govuk-hint">
+        The latitude coordinate (e.g., '51.5072')
+      </div>
+      {% set aria_describedby = "latitude-hint" + (" latitude-error" if form.latitude.errors else "") %}
+      {{ form.latitude(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.latitude.errors else ""), id="latitude", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    {{ form.submit(class="govuk-button", data_module="govuk-button", text="Save stop") }}
+    
+    <div class="govuk-button-group">
+      <a href="{{ url_for('main.stops', mode='list') }}" class="govuk-link">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% elif mode == 'remove' %}
+<!-- Remove Stop Confirmation -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="post" action="{{ url_for('main.stops', mode='remove', stop_id=stop_id) }}" novalidate>
+      {{ form.hidden_tag() }}
+      
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Are you sure you want to remove this stop?
+            </h1>
+          </legend>
+          <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+              <span class="govuk-warning-text__assistive">Warning</span>
+              You are about to remove {{ stop.common_name }} ({{ stop.atco_code }})
+            </strong>
+          </div>
+          
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="remove-yes" name="confirm_remove" type="radio" value="yes">
+              <label class="govuk-label govuk-radios__label" for="remove-yes">
+                Yes, remove {{ stop.common_name }}
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="remove-no" name="confirm_remove" type="radio" value="no" checked>
+              <label class="govuk-label govuk-radios__label" for="remove-no">
+                No
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Continue
+        </button>
+        <a class="govuk-link" href="{{ url_for('main.stops', mode='list') }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% else %}
+<!-- Summary List of Stops -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    {% if stops %}
+    <h2 class="govuk-heading-m">You have added {{ stops|length }} stop{% if stops|length != 1 %}s{% endif %}</h2>
+
+    <div class="govuk-form-group">
+      <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m">Stop points for this route</caption>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">ATCO Code</th>
+            <th scope="col" class="govuk-table__header">NaPTAN Code</th>
+            <th scope="col" class="govuk-table__header">Common Name</th>
+            <th scope="col" class="govuk-table__header">Indicator</th>
+            <th scope="col" class="govuk-table__header">Locality</th>
+            <th scope="col" class="govuk-table__header">Longitude</th>
+            <th scope="col" class="govuk-table__header">Latitude</th>
+            <th scope="col" class="govuk-table__header">Travel Time to Next</th>
+            <th scope="col" class="govuk-table__header">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for stop in stops %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ stop.atco_code if stop.atco_code else '—' }}</td>
+            <td class="govuk-table__cell">{{ stop.naptan_code if stop.naptan_code else '—' }}</td>
+            <td class="govuk-table__cell">{{ stop.common_name }}</td>
+            <td class="govuk-table__cell">{{ stop.indicator if stop.indicator else '—' }}</td>
+            <td class="govuk-table__cell">{{ stop.locality }}</td>
+            <td class="govuk-table__cell">{{ stop.longitude if stop.longitude else '—' }}</td>
+            <td class="govuk-table__cell">{{ stop.latitude if stop.latitude else '—' }}</td>
+            <td class="govuk-table__cell">{{ stop.travel_time_to_next|string + ' min' if stop.travel_time_to_next else '—' }}</td>
+            <td class="govuk-table__cell">
+              <a href="{{ url_for('main.stops', mode='edit', stop_id=loop.index0) }}" class="govuk-link">Change</a>
+              <a href="{{ url_for('main.stops', mode='remove', stop_id=loop.index0) }}" class="govuk-link govuk-!-margin-left-3">Remove</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="govuk-!-margin-bottom-6">
+      <h2 class="govuk-heading-m">Route Map</h2>
+      <div id="stopsMap" style="height: 500px; width: 100%; border: 1px solid #ddd;"></div>
+    </div>
+
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize map
+        const map = L.map('stopsMap').setView([51.505, -0.09], 13); // Default to London
+        
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Create arrays to hold stop data
+        let stopsData = [];
+        try {
+          // Safely parse the JSON data
+          stopsData = JSON.parse('{{ stops|tojson|safe }}');
+        } catch (e) {
+          console.error('Error parsing stops data:', e);
+        }
+        
+        const markers = [];
+        const routeCoordinates = [];
+        
+        // Add markers for each stop
+        if (stopsData && stopsData.length > 0) {
+          stopsData.forEach(function(stop, index) {
+            // Skip stops without coordinates
+            if (!stop.latitude || !stop.longitude) return;
+            
+            const lat = parseFloat(stop.latitude);
+            const lng = parseFloat(stop.longitude);
+            
+            if (isNaN(lat) || isNaN(lng)) return;
+            
+            routeCoordinates.push([lat, lng]);
+            
+            // Create marker with custom popup content
+            const marker = L.marker([lat, lng])
+              .addTo(map)
+              .bindPopup(
+                '<strong>' + stop.common_name + '</strong><br>' +
+                (stop.indicator ? stop.indicator + '<br>' : '') +
+                stop.locality + '<br>' +
+                (stop.atco_code ? 'ATCO: ' + stop.atco_code + '<br>' : '') +
+                (stop.naptan_code ? 'NaPTAN: ' + stop.naptan_code : '')
+              );
+            
+            // Number the stops
+            marker.bindTooltip((index + 1).toString(), {
+              permanent: true,
+              direction: 'center',
+              className: 'stop-number-tooltip'
+            });
+            
+            markers.push(marker);
+          });
+          
+          // If we have at least one valid stop, center the map on it
+          if (markers.length > 0) {
+            const bounds = L.latLngBounds(routeCoordinates);
+            map.fitBounds(bounds, { padding: [30, 30] });
+          }
+          
+          // If we have at least two stops, fetch and draw the route between them
+          if (routeCoordinates.length >= 2) {
+            // First add a simple straight line temporarily (will be replaced with actual route)
+            const tempLine = L.polyline(routeCoordinates, {color: 'gray', weight: 2, opacity: 0.4, dashArray: '5, 10'}).addTo(map);
+            
+            // Fetch actual driving route from OpenRouteService
+            fetchBusRoute(routeCoordinates, map, tempLine);
+          }
+        }
+      });
+      
+      // Function to fetch the bus route from OpenRouteService
+      function fetchBusRoute(coordinates, map, tempLine) {
+        // Get the API key from the server-side (the actual implementation should use a server endpoint
+        // that proxies the request to OpenRouteService to protect your API key)
+        
+        // Convert the coordinates to the format required by OpenRouteService (longitude,latitude)
+        const orsCoordinates = coordinates.map(function(coord) {
+          // OpenRouteService expects [lng, lat] format
+          return [parseFloat(coord[1]), parseFloat(coord[0])];
+        });
+        
+        // For demo purposes, we'll use the OpenRouteService public API
+        // In a production app, this should be handled server-side to protect your API key
+        const apiKey = '{{ config.get("OPENROUTE_SERVICE_API_KEY", "") }}';
+        
+        // Only proceed if we have an API key
+        if (apiKey) {
+          // Show loading indicator
+          const loadingIndicator = L.control({position: 'bottomright'});
+          loadingIndicator.onAdd = function() {
+            const div = L.DomUtil.create('div', 'route-loading');
+            div.innerHTML = 'Calculating bus route...';
+            div.style.padding = '5px 10px';
+            div.style.background = 'white';
+            div.style.border = '1px solid #ccc';
+            return div;
+          };
+          loadingIndicator.addTo(map);
+          
+          // Build the request to OpenRouteService
+          const body = JSON.stringify({
+            coordinates: orsCoordinates,
+            instructions: false,
+            preference: "recommended",
+            units: "m",
+            geometry: true,
+            profile: "driving-hgv", // Use HGV profile for buses (avoids low bridges)
+            options: {
+              profile_params: {
+                restrictions: {
+                  height: 4.4, // Standard UK double-decker height in meters
+                  width: 2.55 // Standard UK bus width in meters
+                }
+              }
+            }
+          });
+          
+          // Make the API request
+          fetch('https://api.openrouteservice.org/v2/directions/driving-hgv/geojson', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json, application/geo+json',
+              'Content-Type': 'application/json',
+              'Authorization': apiKey
+            },
+            body: body
+          })
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            // Remove the temporary line
+            if (tempLine) {
+              map.removeLayer(tempLine);
+            }
+            
+            // Remove loading indicator
+            map.removeControl(loadingIndicator);
+            
+            // Create a GeoJSON layer with the route data
+            const routeLayer = L.geoJSON(data, {
+              style: {
+                color: "#1d70b8", // GOV.UK blue
+                weight: 5,
+                opacity: 0.8
+              }
+            }).addTo(map);
+            
+            // Add information about the route
+            if (data.features && data.features[0] && data.features[0].properties) {
+              const props = data.features[0].properties;
+              const distance = (props.summary.distance / 1000).toFixed(1); // km
+              const duration = Math.round(props.summary.duration / 60); // minutes
+              
+              const routeInfo = L.control({position: 'bottomleft'});
+              routeInfo.onAdd = function() {
+                const div = L.DomUtil.create('div', 'route-info');
+                div.innerHTML = '<strong>Route:</strong> ' + distance + ' km · approx. ' + duration + ' min';
+                div.style.padding = '6px 8px';
+                div.style.background = 'white';
+                div.style.border = '1px solid #ccc';
+                div.style.borderRadius = '3px';
+                return div;
+              };
+              routeInfo.addTo(map);
+            }
+          })
+          .catch(function(error) {
+            console.error('Error fetching bus route:', error);
+            // Remove loading indicator on error
+            map.removeControl(loadingIndicator);
+            
+            // Show error message to user
+            const errorControl = L.control({position: 'bottomright'});
+            errorControl.onAdd = function() {
+              const div = L.DomUtil.create('div', 'route-error');
+              div.innerHTML = 'Error calculating bus route.<br>Using straight line instead.';
+              div.style.padding = '5px 10px';
+              div.style.background = 'rgba(255,0,0,0.1)';
+              div.style.border = '1px solid #f55';
+              div.style.borderRadius = '3px';
+              div.style.color = '#d00';
+              setTimeout(function() {
+                map.removeControl(errorControl);
+              }, 5000);
+              return div;
+            };
+            errorControl.addTo(map);
+          });
+        } else {
+          // If no API key is available, show a message to the user
+          // But keep the temporary straight-line route as a fallback
+          console.warn('No OpenRouteService API key available. Using straight line route instead.');
+          // Update the style of the temp line to make it more visible
+          if (tempLine) {
+            tempLine.setStyle({color: '#3388ff', weight: 4, opacity: 0.7, dashArray: null});
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      .stop-number-tooltip {
+        background-color: rgba(0, 0, 0, 0.6);
+        border: none;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        font-size: 12px;
+        padding: 2px 5px;
+        border-radius: 10px;
+      }
+    </style>
+
+    {% else %}
+    <h2 class="govuk-heading-m">You haven't added any stops yet</h2>
+    <p class="govuk-body">Add your first stop to begin creating your route.</p>
+    {% endif %}
+
+    <div class="govuk-button-group">
+      <a href="{{ url_for('main.stops', mode='add') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+        Add another stop
+      </a>
+      
+      {% if stops|length > 0 %}
+      <a href="{{ url_for('main.journey') }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+        Continue
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

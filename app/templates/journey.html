@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.operator') }}">Operator details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.service') }}">Service details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.route') }}">Route details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.stops') }}">Stop points</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Journey details
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Journey details</h1>
+
+<div class="govuk-inset-text">
+  Enter the details of the journeys that operate on this service. This information will be used to build the timetable.
+</div>
+<div class="govuk-form-group">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="govuk-form-group{% if form.journey_code.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="journey_code">
+        Journey code
+      </label>
+      {% if form.journey_code.errors %}
+      <p id="journey_code-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.journey_code.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="journey_code-hint" class="govuk-hint">
+        A unique identifier for this journey (e.g., 'J001')
+      </div>
+      {% set aria_describedby = "journey_code-hint" + (" journey_code-error" if form.journey_code.errors else "") %}
+      {{ form.journey_code(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.journey_code.errors else ""), id="journey_code", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.departure_time.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="departure_time">
+        Departure time
+      </label>
+      {% if form.departure_time.errors %}
+      <p id="departure_time-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.departure_time.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="departure_time-hint" class="govuk-hint">
+        The time the journey departs from the first stop (24-hour format, e.g., '09:15')
+      </div>
+      {% set aria_describedby = "departure_time-hint" + (" departure_time-error" if form.departure_time.errors else "") %}
+      {{ form.departure_time(class="govuk-input govuk-input--width-5" + (" govuk-input--error" if form.departure_time.errors else ""), id="departure_time", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.days_of_week.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="days_of_week">
+        Days of operation
+      </label>
+      {% if form.days_of_week.errors %}
+      <p id="days_of_week-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.days_of_week.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="days_of_week-hint" class="govuk-hint">
+        The days when this journey operates
+      </div>
+      {% set aria_describedby = "days_of_week-hint" + (" days_of_week-error" if form.days_of_week.errors else "") %}
+      {{ form.days_of_week(class="govuk-select" + (" govuk-select--error" if form.days_of_week.errors else ""), id="days_of_week", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group">
+      <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes__item">
+          {{ form.is_frequent_service(class="govuk-checkboxes__input", id="is_frequent_service") }}
+          <label class="govuk-label govuk-checkboxes__label" for="is_frequent_service">
+            This is a frequent service (runs at regular intervals)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-form-group{% if form.frequency_minutes.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="frequency_minutes">
+        Frequency (minutes)
+      </label>
+      {% if form.frequency_minutes.errors %}
+      <p id="frequency_minutes-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.frequency_minutes.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="frequency_minutes-hint" class="govuk-hint">
+        How often the service runs (e.g., '15' for every 15 minutes)
+      </div>
+      {% set aria_describedby = "frequency_minutes-hint" + (" frequency_minutes-error" if form.frequency_minutes.errors else "") %}
+      {{ form.frequency_minutes(class="govuk-input govuk-input--width-5" + (" govuk-input--error" if form.frequency_minutes.errors else ""), id="frequency_minutes", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div id="timetableContainer" class="govuk-!-margin-top-6" >
+      <h2 class="govuk-heading-m">Bus Timetable Preview</h2>
+      <p class="govuk-body">This timetable shows departure times for each stop over a 7-day window based on your inputs. Times will update automatically when you change the form values.</p>
+      
+      <div class="govuk-tabs" data-module="govuk-tabs">
+        <h2 class="govuk-tabs__title">Timetable days</h2>
+        <ul class="govuk-tabs__list" id="timetableTabs">
+          <!-- Tabs will be dynamically generated -->
+        </ul>
+        <div id="timetableContent">
+          <!-- Timetable content will be dynamically generated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Styles for the timetable -->
+    <style>
+      .timetable-table {
+        font-size: 0.9em;
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 30px;
+      }
+      .timetable-table th {
+        white-space: nowrap;
+        min-width: 70px;
+      }
+      .timetable-table th.stop-name {
+        width: 200px;
+        text-align: left;
+      }
+      .timetable-container {
+        overflow-x: auto;
+      }
+      .no-service {
+        color: #666;
+        font-style: italic;
+      }
+    </style>
+
+    <!-- JavaScript for the timetable generator -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get form elements
+        const departureTimeInput = document.getElementById('departure_time');
+        const daysOfWeekSelect = document.getElementById('days_of_week');
+        const frequentServiceCheckbox = document.getElementById('is_frequent_service');
+        const frequencyMinutesInput = document.getElementById('frequency_minutes');
+        
+        // Add event listeners to form fields to update the timetable
+        departureTimeInput.addEventListener('change', generateTimetable);
+        daysOfWeekSelect.addEventListener('change', generateTimetable);
+        frequentServiceCheckbox.addEventListener('change', generateTimetable);
+        frequencyMinutesInput.addEventListener('change', generateTimetable);
+        frequencyMinutesInput.addEventListener('input', generateTimetable);
+        
+        // Initial generation
+        generateTimetable();
+        
+        function generateTimetable() {
+          // Get the bus stops data from session
+          let stopsData = [];
+          try {
+            stopsData = JSON.parse('{{ session.get("stops", [])|tojson|safe }}');
+          } catch (e) {
+            console.error('Error parsing stops data:', e);
+          }
+          
+          if (stopsData.length === 0) {
+            document.getElementById('timetableContent').innerHTML = 
+              '<p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4 no-service">No stops have been added yet. Please add stops before generating a timetable.</p>';
+            document.getElementById('timetableTabs').innerHTML = '';
+            return;
+          }
+          
+          // Get form values
+          const departureTime = departureTimeInput.value || '09:00';
+          const daysOfWeek = daysOfWeekSelect.value || 'monday_to_friday';
+          const isFrequentService = frequentServiceCheckbox.checked;
+          let frequencyMinutes = parseInt(frequencyMinutesInput.value || '60');
+          
+          if (isNaN(frequencyMinutes) || frequencyMinutes < 1) {
+            frequencyMinutes = 60; // Default to hourly if invalid
+          }
+          
+          // Determine which days to show based on selection
+          const daysToShow = getDaysForSelection(daysOfWeek);
+          
+          // Generate tabs for each day
+          const tabsHtml = daysToShow.map((day, index) => {
+            return `<li class="govuk-tabs__list-item${index === 0 ? ' govuk-tabs__list-item--selected' : ''}">
+              <a class="govuk-tabs__tab" href="#tab-${day.toLowerCase()}">${day}</a>
+            </li>`;
+          }).join('');
+          
+          document.getElementById('timetableTabs').innerHTML = tabsHtml;
+          
+          // Generate timetable content for each day
+          const timetableContentHtml = daysToShow.map((day, index) => {
+            // For each day, generate departure times based on frequency
+            const dayTimetable = generateDayTimetable(departureTime, frequencyMinutes, isFrequentService, stopsData, day);
+            
+            return `<div class="govuk-tabs__panel${index !== 0 ? ' govuk-tabs__panel--hidden' : ''}" id="tab-${day.toLowerCase()}">
+              <div class="timetable-container">
+                <table class="govuk-table timetable-table">
+                  <caption class="govuk-table__caption govuk-table__caption--m">${day} Schedule</caption>
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header stop-name">Stop Name</th>
+                      ${dayTimetable.headers.map(time => 
+                        `<th scope="col" class="govuk-table__header">${time}</th>`
+                      ).join('')}
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    ${dayTimetable.rows.map(row => 
+                      `<tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">${row.stopName}</th>
+                        ${row.times.map(time => 
+                          `<td class="govuk-table__cell">${time || '—'}</td>`
+                        ).join('')}
+                      </tr>`
+                    ).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>`;
+          }).join('');
+          
+          document.getElementById('timetableContent').innerHTML = timetableContentHtml;
+          
+          // Initialize GOV.UK tabs component
+          if (window.GOVUKFrontend && window.GOVUKFrontend.Tabs) {
+            const tabs = document.querySelector('[data-module="govuk-tabs"]');
+            if (tabs) {
+              new window.GOVUKFrontend.Tabs(tabs).init();
+            }
+          }
+        }
+        
+        function getDaysForSelection(daysOfWeek) {
+          switch(daysOfWeek) {
+            case 'monday_to_friday':
+              return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            case 'monday_to_saturday':
+              return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            case 'all_week':
+              return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            case 'weekends':
+              return ['Saturday', 'Sunday'];
+            default:
+              return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+          }
+        }
+        
+        function generateDayTimetable(baseTime, frequencyMinutes, isFrequentService, stopsData, day) {
+          // Parse the base departure time
+          const [baseHours, baseMinutes] = baseTime.split(':').map(Number);
+          
+          // For frequent services, create trips throughout the day
+          const departureCount = isFrequentService ? Math.floor(14 * 60 / frequencyMinutes) : 1;
+          
+          // Generate all departure times from the first stop
+          const departureTimes = [];
+          for (let i = 0; i < departureCount; i++) {
+            let hours = baseHours + Math.floor((baseMinutes + i * frequencyMinutes) / 60);
+            const minutes = (baseMinutes + i * frequencyMinutes) % 60;
+            
+            // Ensure we stay within 24 hours
+            if (hours >= 24) break;
+            
+            departureTimes.push({
+              hours,
+              minutes,
+              formatted: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+            });
+          }
+          
+          // Generate column headers (departure times from first stop)
+          const headers = departureTimes.map(time => time.formatted);
+          
+          // Generate rows for each stop
+          const rows = [];
+          let cumulativeMinutes = 0;
+          
+          stopsData.forEach((stop, index) => {
+            const stopTimes = [];
+            
+            // Add travel time to next stop to cumulative time
+            if (index > 0) {
+              const prevStop = stopsData[index - 1];
+              const travelTime = prevStop.travel_time_to_next !== null ? 
+                parseInt(prevStop.travel_time_to_next) : 0;
+              
+              if (!isNaN(travelTime)) {
+                cumulativeMinutes += travelTime;
+              }
+            }
+            
+            // Calculate times for this stop based on cumulative minutes
+            departureTimes.forEach(baseTime => {
+              let totalMinutes = baseTime.hours * 60 + baseTime.minutes + cumulativeMinutes;
+              let hours = Math.floor(totalMinutes / 60);
+              let minutes = totalMinutes % 60;
+              
+              // Ensure we stay within 24 hours
+              if (hours >= 24) {
+                stopTimes.push('');
+              } else {
+                stopTimes.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+              }
+            });
+            
+            rows.push({
+              stopName: stop.common_name + (stop.indicator ? ` (${stop.indicator})` : ''),
+              times: stopTimes
+            });
+          });
+          
+          return {
+            headers,
+            rows
+          };
+        }
+      });
+    </script>
+
+    {{ form.submit(class="govuk-button", data_module="govuk-button") }}
+  </form>
+</div>
+{% endblock %}

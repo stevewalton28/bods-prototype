@@ -1,0 +1,125 @@
+/* Custom styles that extend GOV.UK Design System */
+
+/* HMCTS specific color variables */
+:root {
+  --hmcts-brand-primary: #1d70b8;
+  --hmcts-brand-secondary: #003078;
+  --hmcts-text-color: #0b0c0c;
+  --hmcts-secondary-text-color: #505a5f;
+  --hmcts-border-color: #b1b4b6;
+  --hmcts-focus-color: #ffdd00;
+  --hmcts-error-color: #d4351c;
+  --hmcts-success-color: #00703c;
+}
+
+/* Typography enhancements */
+.hmcts-page-title {
+  color: var(--hmcts-brand-secondary);
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.hmcts-caption {
+  color: var(--hmcts-secondary-text-color);
+  font-size: 19px;
+  line-height: 1.25;
+  margin-bottom: 15px;
+}
+
+/* Customized components */
+.hmcts-card {
+  border: 1px solid var(--hmcts-border-color);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.hmcts-card__heading {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.hmcts-card__content {
+  margin-bottom: 0;
+}
+
+/* Custom header styling */
+.hmcts-header__service-name {
+  font-weight: 700;
+}
+
+/* Custom navigation */
+.hmcts-subnav {
+  margin-bottom: 30px;
+}
+
+.hmcts-subnav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hmcts-subnav__item {
+  margin-bottom: 10px;
+}
+
+.hmcts-subnav__link {
+  text-decoration: none;
+  display: block;
+  padding: 5px 0;
+  border-left: 4px solid transparent;
+  padding-left: 10px;
+}
+
+.hmcts-subnav__link:hover {
+  border-left-color: var(--hmcts-border-color);
+}
+
+.hmcts-subnav__link:focus {
+  border-left-color: var(--hmcts-focus-color);
+}
+
+.hmcts-subnav__link--active {
+  border-left-color: var(--hmcts-brand-primary);
+  font-weight: 700;
+}
+
+/* Custom footer enhancements */
+.hmcts-footer__link:focus {
+  background-color: var(--hmcts-focus-color);
+  box-shadow: 0 -2px var(--hmcts-focus-color), 0 4px #0b0c0c;
+  color: #0b0c0c;
+  outline: 3px solid transparent;
+  text-decoration: none;
+}
+
+/* Custom button variants */
+.hmcts-button--secondary {
+  background-color: #f3f2f1;
+  box-shadow: 0 2px 0 #929191;
+  color: #0b0c0c;
+}
+
+.hmcts-button--secondary:hover {
+  background-color: #dbdad9;
+}
+
+/* Panel styles */
+.hmcts-panel {
+  padding: 30px;
+  margin-bottom: 30px;
+  background-color: #f3f2f1;
+}
+
+.hmcts-panel--success {
+  border-left: 5px solid var(--hmcts-success-color);
+}
+
+.hmcts-panel--info {
+  border-left: 5px solid var(--hmcts-brand-primary);
+}
+
+.govuk-notification-banner--error {
+  border-color: #d4351c;
+  background-color: #d4351c;
+  margin-bottom: 0px;
+}

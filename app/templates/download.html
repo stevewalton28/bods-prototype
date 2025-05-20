@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.review') }}">Review</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Download
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-panel govuk-panel--confirmation">
+  <h1 class="govuk-panel__title">
+    XML successfully generated
+  </h1>
+  <div class="govuk-panel__body">
+    Your TransXChange file is ready to download
+  </div>
+</div>
+
+<p class="govuk-body">
+  Your TransXChange XML file has been generated successfully and is now ready to download.
+</p>
+
+<p class="govuk-body">
+  This file is compliant with the TransXChange 2.4 schema and can be submitted to the Bus Open Data Service (BODS).
+</p>
+
+<a href="{{ url_for('main.get_file', filename=filename) }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+  Download XML file
+</a>
+
+<h2 class="govuk-heading-m">What to do next</h2>
+
+<p class="govuk-body">After downloading your XML file:</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li>Log in to the <a href="https://www.gov.uk/guidance/bus-open-data-service" class="govuk-link">Bus Open Data Service</a></li>
+  <li>Navigate to the 'Publish timetables' section</li>
+  <li>Upload your TransXChange XML file</li>
+  <li>Follow the validation process to complete your submission</li>
+</ol>
+
+<div class="govuk-inset-text">
+  Remember to check for any validation warnings or errors in BODS after uploading.
+</div>
+
+<p class="govuk-body">
+  <a href="{{ url_for('main.index') }}" class="govuk-link">
+    Create another submission
+  </a>
+</p>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.operator') }}">Operator details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Service details
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Service details</h1>
+
+<div class="govuk-form-group">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="govuk-form-group{% if form.service_code.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="service_code">
+        Service code
+      </label>
+      {% if form.service_code.errors %}
+      <p id="service_code-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.service_code.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="service_code-hint" class="govuk-hint">
+        A unique code for this service (e.g., '123', 'ABC45')
+      </div>
+      {% set aria_describedby = "service_code-hint" + (" service_code-error" if form.service_code.errors else "") %}
+      {{ form.service_code(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.service_code.errors else ""), id="service_code", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.line_name.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="line_name">
+        Line name
+      </label>
+      {% if form.line_name.errors %}
+      <p id="line_name-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.line_name.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="line_name-hint" class="govuk-hint">
+        The line number or name as displayed to the public (e.g., '42', 'X1')
+      </div>
+      {% set aria_describedby = "line_name-hint" + (" line_name-error" if form.line_name.errors else "") %}
+      {{ form.line_name(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.line_name.errors else ""), id="line_name", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.start_date.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="start_date">
+        Service start date
+      </label>
+      {% if form.start_date.errors %}
+      <p id="start_date-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.start_date.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="start_date-hint" class="govuk-hint">
+        The date when this service starts operating
+      </div>
+      {% set aria_describedby = "start_date-hint" + (" start_date-error" if form.start_date.errors else "") %}
+      {{ form.start_date(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.start_date.errors else ""), id="start_date", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.description.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="description">
+        Service description
+      </label>
+      {% if form.description.errors %}
+      <p id="description-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.description.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="description-hint" class="govuk-hint">
+        A brief description of the service, including key information for passengers
+      </div>
+      {% set aria_describedby = "description-hint" + (" description-error" if form.description.errors else "") %}
+      {{ form.description(class="govuk-textarea" + (" govuk-textarea--error" if form.description.errors else ""), id="description", rows="5", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.origin.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="origin">
+        Origin
+      </label>
+      {% if form.origin.errors %}
+      <p id="origin-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.origin.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="origin-hint" class="govuk-hint">
+        The starting point of the service
+      </div>
+      {% set aria_describedby = "origin-hint" + (" origin-error" if form.origin.errors else "") %}
+      {{ form.origin(class="govuk-input" + (" govuk-input--error" if form.origin.errors else ""), id="origin", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.destination.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="destination">
+        Destination
+      </label>
+      {% if form.destination.errors %}
+      <p id="destination-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.destination.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="destination-hint" class="govuk-hint">
+        The final destination of the service
+      </div>
+      {% set aria_describedby = "destination-hint" + (" destination-error" if form.destination.errors else "") %}
+      {{ form.destination(class="govuk-input" + (" govuk-input--error" if form.destination.errors else ""), id="destination", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group">
+      <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes__item">
+          {{ form.wheelchair_accessible(class="govuk-checkboxes__input", id="wheelchair_accessible") }}
+          <label class="govuk-label govuk-checkboxes__label" for="wheelchair_accessible">
+            This service is wheelchair accessible
+          </label>
+        </div>
+      </div>
+    </div>
+
+    {{ form.submit(class="govuk-button", data_module="govuk-button") }}
+  </form>
+</div>
+{% endblock %}

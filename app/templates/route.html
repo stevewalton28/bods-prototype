@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.operator') }}">Operator details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.service') }}">Service details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Route details
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Route details</h1>
+
+<div class="govuk-form-group">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="govuk-form-group{% if form.route_id.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="route_id">
+        Route ID
+      </label>
+      {% if form.route_id.errors %}
+      <p id="route_id-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.route_id.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="route_id-hint" class="govuk-hint">
+        A unique identifier for this route (e.g., 'R001')
+      </div>
+      {% set aria_describedby = "route_id-hint" + (" route_id-error" if form.route_id.errors else "") %}
+      {{ form.route_id(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.route_id.errors else ""), id="route_id", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.description.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="description">
+        Route description
+      </label>
+      {% if form.description.errors %}
+      <p id="description-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.description.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="description-hint" class="govuk-hint">
+        A short description of the route (e.g., 'Town Centre to Hospital')
+      </div>
+      {% set aria_describedby = "description-hint" + (" description-error" if form.description.errors else "") %}
+      {{ form.description(class="govuk-input" + (" govuk-input--error" if form.description.errors else ""), id="description", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.direction.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="direction">
+        Direction
+      </label>
+      {% if form.direction.errors %}
+      <p id="direction-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.direction.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="direction-hint" class="govuk-hint">
+        The direction of travel
+      </div>
+      {% set aria_describedby = "direction-hint" + (" direction-error" if form.direction.errors else "") %}
+      {{ form.direction(class="govuk-select" + (" govuk-select--error" if form.direction.errors else ""), id="direction", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-inset-text">
+      In the next step, you'll add the stops for this route.
+    </div>
+
+    {{ form.submit(class="govuk-button", data_module="govuk-button") }}
+  </form>
+</div>
+{% endblock %}

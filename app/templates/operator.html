@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Operator details
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Operator details</h1>
+
+<div class="govuk-form-group">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="govuk-form-group{% if form.operator_code.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="operator_code">
+        Operator code
+      </label>
+      {% if form.operator_code.errors %}
+      <p id="operator_code-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.operator_code.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="operator_code-hint" class="govuk-hint">
+        Your unique operator code as registered with the Traffic Commissioner
+      </div>
+      {% set aria_describedby = "operator_code-hint" + (" operator_code-error" if form.operator_code.errors else "") %}
+      {{ form.operator_code(class="govuk-input" + (" govuk-input--error" if form.operator_code.errors else ""), id="operator_code", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.operator_short_name.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="operator_short_name">
+        Operator short name
+      </label>
+      {% if form.operator_short_name.errors %}
+      <p id="operator_short_name-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.operator_short_name.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="operator_short_name-hint" class="govuk-hint">
+        The abbreviated name of your company used for display purposes
+      </div>
+      {% set aria_describedby = "operator_short_name-hint" + (" operator_short_name-error" if form.operator_short_name.errors else "") %}
+      {{ form.operator_short_name(class="govuk-input" + (" govuk-input--error" if form.operator_short_name.errors else ""), id="operator_short_name", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.operator_name_on_licence.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="operator_name_on_licence">
+        Full operator name (as shown on licence)
+      </label>
+      {% if form.operator_name_on_licence.errors %}
+      <p id="operator_name_on_licence-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.operator_name_on_licence.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.operator_name_on_licence(class="govuk-input" + (" govuk-input--error" if form.operator_name_on_licence.errors else ""), id="operator_name_on_licence", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.trading_name.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="trading_name">
+        Trading name
+      </label>
+      {% if form.trading_name.errors %}
+      <p id="trading_name-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.trading_name.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="trading_name-hint" class="govuk-hint">
+        The name under which you operate your services
+      </div>
+      {% set aria_describedby = "trading_name-hint" + (" trading_name-error" if form.trading_name.errors else "") %}
+      {{ form.trading_name(class="govuk-input" + (" govuk-input--error" if form.trading_name.errors else ""), id="trading_name", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.licence_number.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="licence_number">
+        Licence number
+      </label>
+      {% if form.licence_number.errors %}
+      <p id="licence_number-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.licence_number.errors[0] }}
+      </p>
+      {% endif %}
+      <div id="licence_number-hint" class="govuk-hint">
+        Your PSV operator licence number (e.g., PB1234567)
+      </div>
+      {% set aria_describedby = "licence_number-hint" + (" licence_number-error" if form.licence_number.errors else "") %}
+      {{ form.licence_number(class="govuk-input" + (" govuk-input--error" if form.licence_number.errors else ""), id="licence_number", spellcheck="false", **{'aria-describedby': aria_describedby}) }}
+    </div>
+
+    <div class="govuk-form-group{% if form.licence_classification.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="licence_classification">
+        Licence classification
+      </label>
+      {% if form.licence_classification.errors %}
+      <p id="licence_classification-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.licence_classification.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.licence_classification(class="govuk-select" + (" govuk-select--error" if form.licence_classification.errors else ""), id="licence_classification") }}
+    </div>
+
+    <h2 class="govuk-heading-m">Contact information</h2>
+
+    <div class="govuk-form-group{% if form.contact_person.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="contact_person">
+        Contact person
+      </label>
+      {% if form.contact_person.errors %}
+      <p id="contact_person-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.contact_person.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.contact_person(class="govuk-input" + (" govuk-input--error" if form.contact_person.errors else ""), id="contact_person", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.telephone.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="telephone">
+        Telephone number
+      </label>
+      {% if form.telephone.errors %}
+      <p id="telephone-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.telephone.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.telephone(class="govuk-input govuk-input--width-20" + (" govuk-input--error" if form.telephone.errors else ""), id="telephone", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.email.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="email">
+        Email address
+      </label>
+      {% if form.email.errors %}
+      <p id="email-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.email.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.email(class="govuk-input" + (" govuk-input--error" if form.email.errors else ""), id="email", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.website.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="website">
+        Website (optional)
+      </label>
+      {% if form.website.errors %}
+      <p id="website-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.website.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.website(class="govuk-input" + (" govuk-input--error" if form.website.errors else ""), id="website", spellcheck="false") }}
+    </div>
+
+    <h2 class="govuk-heading-m">Address</h2>
+    
+    <div class="govuk-form-group{% if form.address_line1.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="address_line1">
+        Address line 1
+      </label>
+      {% if form.address_line1.errors %}
+      <p id="address_line1-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.address_line1.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.address_line1(class="govuk-input" + (" govuk-input--error" if form.address_line1.errors else ""), id="address_line1", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.address_line2.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="address_line2">
+        Address line 2 (optional)
+      </label>
+      {% if form.address_line2.errors %}
+      <p id="address_line2-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.address_line2.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.address_line2(class="govuk-input" + (" govuk-input--error" if form.address_line2.errors else ""), id="address_line2", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.address_line3.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="address_line3">
+        Address line 3 (optional)
+      </label>
+      {% if form.address_line3.errors %}
+      <p id="address_line3-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.address_line3.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.address_line3(class="govuk-input" + (" govuk-input--error" if form.address_line3.errors else ""), id="address_line3", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.town.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="town">
+        Town or city
+      </label>
+      {% if form.town.errors %}
+      <p id="town-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.town.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.town(class="govuk-input govuk-input--width-20" + (" govuk-input--error" if form.town.errors else ""), id="town", spellcheck="false") }}
+    </div>
+
+    <div class="govuk-form-group{% if form.postcode.errors %} govuk-form-group--error{% endif %}">
+      <label class="govuk-label" for="postcode">
+        Postcode
+      </label>
+      {% if form.postcode.errors %}
+      <p id="postcode-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ form.postcode.errors[0] }}
+      </p>
+      {% endif %}
+      {{ form.postcode(class="govuk-input govuk-input--width-10" + (" govuk-input--error" if form.postcode.errors else ""), id="postcode", spellcheck="false") }}
+    </div>
+
+    {{ form.submit(class="govuk-button", data_module="govuk-button") }}
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.index') }}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.start') }}">Start</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.operator') }}">Operator details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.service') }}">Service details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.route') }}">Route details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.stops') }}">Stop points</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{{ url_for('main.journey') }}">Journey details</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      Review
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Check your answers before generating XML</h1>
+
+<h2 class="govuk-heading-m">Operator details</h2>
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Operator code
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('operator_code', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.operator') }}">
+        Change<span class="govuk-visually-hidden"> operator code</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Operator short name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('operator_short_name', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.operator') }}">
+        Change<span class="govuk-visually-hidden"> operator short name</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Operator name on licence
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('operator_name_on_licence', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.operator') }}">
+        Change<span class="govuk-visually-hidden"> operator name on licence</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Licence number
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('licence_number', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.operator') }}">
+        Change<span class="govuk-visually-hidden"> licence number</span>
+      </a>
+    </dd>
+  </div>
+</dl>
+
+<h2 class="govuk-heading-m">Service details</h2>
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Service code
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('service_code', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> service code</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Line name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('line_name', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> line name</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Start date
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('start_date', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> start date</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Description
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('description', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> description</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Origin
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('origin', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> origin</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Destination
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('destination', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.service') }}">
+        Change<span class="govuk-visually-hidden"> destination</span>
+      </a>
+    </dd>
+  </div>
+</dl>
+
+<h2 class="govuk-heading-m">Route and stops</h2>
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Route ID
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('route_id', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.route') }}">
+        Change<span class="govuk-visually-hidden"> route id</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Route Description
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('route_description', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.route') }}">
+        Change<span class="govuk-visually-hidden"> route description</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Direction
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('direction', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.route') }}">
+        Change<span class="govuk-visually-hidden"> direction</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Stops ({{ session.get('stops', [])|length }})
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {% if session.get('stops') %}
+      <ul class="govuk-list">
+        {% for stop in session.get('stops', []) %}
+        <li>{{ stop.common_name }}{% if stop.indicator %} ({{ stop.indicator }}){% endif %}
+          {% if stop.atco_code %} - ATCO: {{ stop.atco_code }}{% endif %}
+          {% if stop.naptan_code %} - NaPTAN: {{ stop.naptan_code }}{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="govuk-body">—</p>
+      {% endif %}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.stops') }}">
+        Change<span class="govuk-visually-hidden"> stops</span>
+      </a>
+    </dd>
+  </div>
+</dl>
+
+<h2 class="govuk-heading-m">Journey details</h2>
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Journey code
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('journey_code', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.journey') }}">
+        Change<span class="govuk-visually-hidden"> journey code</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Departure time
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ session.get('departure_time', '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.journey') }}">
+        Change<span class="govuk-visually-hidden"> departure time</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Days of operation
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {% set days_map = {
+        'monday_to_friday': 'Monday to Friday',
+        'monday_to_saturday': 'Monday to Saturday',
+        'all_week': 'All Week',
+        'weekends': 'Weekends Only'
+      } %}
+      {{ days_map.get(session.get('days_of_week'), '—') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.journey') }}">
+        Change<span class="govuk-visually-hidden"> days of operation</span>
+      </a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Service type
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{ 'Frequent service' if session.get('is_frequent_service') else 'Standard service' }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.journey') }}">
+        Change<span class="govuk-visually-hidden"> service type</span>
+      </a>
+    </dd>
+  </div>
+  {% if session.get('is_frequent_service') %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Frequency
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Every {{ session.get('frequency_minutes', '—') }} minutes
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{ url_for('main.journey') }}">
+        Change<span class="govuk-visually-hidden"> frequency</span>
+      </a>
+    </dd>
+  </div>
+  {% endif %}
+</dl>
+
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-warning-text__assistive">Warning</span>
+    This is a demonstration service. The XML file generated will be valid according to the TransXChange schema, but contains example data as shown above.
+  </strong>
+</div>
+
+<form action="{{ url_for('main.generate') }}" method="post">
+  <button type="submit" class="govuk-button" data-module="govuk-button">
+    Generate XML
+  </button>
+</form>
+{% endblock %}
